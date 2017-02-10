@@ -42,10 +42,13 @@ points(d_mrc, cex = 2, pch = 20)
 ```
 
 ```{r eval=FALSE}
-consumerKey = "jR7bLSz_BHJNGq4H7nFXbA"
-consumerSecret = "KsY_jCNS4RRfX-PbDDSBEee2FSY"
-token = "1JFbHTy0lWbzGCBjfr7mVqyuwfUtqeYE"
-token_secret = "ptj27Sw1VJkoQJIJ14QwAqJZDwg"
+
+### Ignore this section for now
+
+consumerKey = "l_rSuqvu8nD49nJ7Y3uGKw"
+consumerSecret = "AZA-PdWtTt2PCTK5SFp792LGHUI"
+token = "	tzJ8ZyDR2jeAm4SAEMOkJJe5gFPOkwBl"
+token_secret = "e89np3uLyLE5ffunidczgL_HpRY"
 
 require(httr)
 require(httpuv)
@@ -148,6 +151,8 @@ demo <- function() {
 }
 
 q <- demo()
+
+### Q Contains a small list of starbucks in NY, can be refined
 
 
 ```
