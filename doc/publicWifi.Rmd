@@ -1,0 +1,153 @@
+---
+title: 'Project 2: Seamless Public WiFi'
+author: 'Group 1: Xuehan Liu, Zhilin Fan, Vikas Arun, Ken Chew, Sean Reddy'
+date: "February 20, 2017"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+```{r}
+data1 <- read.csv("../data/Free_WiFi_Hotspots_09042005.csv", header=TRUE)
+data2 <- read.csv("../data/LinkNYC_Locations.csv", header=TRUE)
+
+data_c1 <- cbind(data1$LON, data1$LAT, data1$SSID)
+data_c2 <- cbind(data2$Longitude, data2$Longitude, data2$CB.Link.ID)
+
+data_c <- as.data.frame(rbind(data_c1, data_c2))
+colnames(data_c) <- c("LON", "LAT", "network")
+
+library(dismo)
+library(sp)
+library(geosphere)
+library(ggplot2)
+library(ggmap)
+library(rgeos)
+library(scales)
+
+emory <- gmap("New York,New York", zoom = 12, scale = 3)
+d <- data_c
+coordinates(d) <- ~ LON + LAT
+projection(d) <- "+init=epsg:4326"
+
+d_mrc <- spTransform(d, CRS = CRS(projection(emory)))
+
+d_mrc_bff <- gBuffer(d_mrc, width = 150)
+
+plot(emory)
+par(col = alpha('darkgreen', .35))
+plot(d_mrc_bff, add = TRUE)
+points(d_mrc, cex = 2, pch = 20)
+
+```
+
+```{r eval=FALSE}
+consumerKey = "jR7bLSz_BHJNGq4H7nFXbA"
+consumerSecret = "KsY_jCNS4RRfX-PbDDSBEee2FSY"
+token = "1JFbHTy0lWbzGCBjfr7mVqyuwfUtqeYE"
+token_secret = "ptj27Sw1VJkoQJIJ14QwAqJZDwg"
+
+require(httr)
+require(httpuv)
+require(jsonlite)
+# authorization
+myapp <- oauth_app("YELP", key=consumerKey, secret=consumerSecret)
+sig <- sign_oauth1.0(myapp, token=token,token_secret=token_secret)
+
+limit <- 40
+,-74.258188
+# or 10 bars by geo-coordinates
+yelpurl <- paste0("https://api.yelp.com/v3/businesses/search?limit=",limit,"&term=starbucks&location=New+York%2C+NY")
+
+locationdata <- GET(yelpurl, sig)
+locationdataContent <- content(locationdata)
+locationdataList <- jsonlite::fromJSON(toJSON(locationdataContent))
+q <- head(data.frame(locationdataList))
+
+q$error.description
+```
+
+```{r}
+require(httr)
+require(httpuv)
+require(jsonlite)
+require(base64enc)
+
+# Your credentials, from https://www.yelp.com/developers/manage_api_keys
+consumerKey = "l_rSuqvu8nD49nJ7Y3uGKw"
+consumerSecret = "AZA-PdWtTt2PCTK5SFp792LGHUI"
+token = "	tzJ8ZyDR2jeAm4SAEMOkJJe5gFPOkwBl"
+token_secret = "e89np3uLyLE5ffunidczgL_HpRY"
+
+yelp_query <- function(path, query_args) {
+  # Use OAuth to authorize your request.
+  myapp <- oauth_app("YELP", key=consumerKey, secret=consumerSecret)
+  sig <- sign_oauth1.0(myapp, token=token, token_secret=token_secret)
+
+  # Build Yelp API URL.
+  scheme <- "https"
+  host <- "api.yelp.com"
+  yelpurl <- paste0(scheme, "://", host, path)
+
+  # Make request.
+  results <- GET(yelpurl, sig, query=query_args)
+
+  # If status is not success, print some debugging output.
+  HTTP_SUCCESS <- 200
+  if (results$status != HTTP_SUCCESS) {
+      print(results)
+  }
+  return(results)
+}
+
+yelp_search <- function(term, location, limit=10) {
+  # Search term and location go in the query string.
+  path <- "/v2/search/"
+  query_args <- list(term=term, location=location, limit=limit)
+
+  # Make request.
+  results <- yelp_query(path, query_args)
+  return(results)
+}
+
+yelp_business <- function(business_id) {
+  # Business ID goes in the path.
+  path <- paste0("/v2/business/", business_id)
+  query_args <- list()
+
+  # Make request.
+  results <- yelp_query(path, query_args)
+  return(results)
+}
+
+print_search_results <- function(yelp_search_result) {
+  print("=== Search Results ===")
+  # Load data.  Flip it around to get an easy-to-handle list.
+  locationdataContent = content(yelp_search_result)
+  locationdataList=jsonlite::fromJSON(toJSON(locationdataContent))
+
+  # Print output.
+  print(head(data.frame(locationdataList)))
+}
+
+print_business_results <- function(yelp_business_result) {
+  print("=== Business ===")
+  print(content(yelp_business_result))
+}
+
+demo <- function() {
+  # Query Yelp API, print results.
+  yelp_search_result <- yelp_search(term="starbucks", location="New York, NY", limit=40)
+  print_search_results(yelp_search_result)
+
+  # Pick the top search result, get more info about it.
+  # Find Yelp business ID, such as "giacomos-ristorante-boston".
+  business_id = content(yelp_search_result)$businesses[[1]]$id
+  yelp_business_result <- yelp_business(business_id)
+  print_business_results(yelp_business_result)
+}
+
+q <- demo()
+
+
+```
