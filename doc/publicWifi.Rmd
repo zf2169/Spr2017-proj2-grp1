@@ -14,9 +14,6 @@ data2 <- read.csv("../data/LinkNYC_Locations.csv", header=TRUE)
 data_c1 <- cbind(data1$LON, data1$LAT, data1$SSID)
 data_c2 <- cbind(data2$Longitude, data2$Longitude, data2$CB.Link.ID)
 
-data_c <- as.data.frame(rbind(data_c1, data_c2))
-colnames(data_c) <- c("LON", "LAT", "network")
-
 library(dismo)
 library(sp)
 library(geosphere)
@@ -25,19 +22,6 @@ library(ggmap)
 library(rgeos)
 library(scales)
 
-emory <- gmap("New York,New York", zoom = 12, scale = 3)
-d <- data_c
-coordinates(d) <- ~ LON + LAT
-projection(d) <- "+init=epsg:4326"
-
-d_mrc <- spTransform(d, CRS = CRS(projection(emory)))
-
-d_mrc_bff <- gBuffer(d_mrc, width = 150)
-
-plot(emory)
-par(col = alpha('darkgreen', .35))
-plot(d_mrc_bff, add = TRUE)
-points(d_mrc, cex = 2, pch = 20)
 
 ```
 
@@ -58,7 +42,7 @@ myapp <- oauth_app("YELP", key=consumerKey, secret=consumerSecret)
 sig <- sign_oauth1.0(myapp, token=token,token_secret=token_secret)
 
 limit <- 40
-,-74.258188
+
 # or 10 bars by geo-coordinates
 yelpurl <- paste0("https://api.yelp.com/v3/businesses/search?limit=",limit,"&term=starbucks&location=New+York%2C+NY")
 
@@ -138,21 +122,87 @@ print_business_results <- function(yelp_business_result) {
   print(content(yelp_business_result))
 }
 
-demo <- function() {
+demo <- function(searchTerm, neighborhood, borough, limit) {
+  
+  ### THIS ONLY RETURNS FIRST 40. We will have to implement the built in "offset" to acquire ALL results.
+  
+  lat <- vector()
+  lon <- vector()
+  businessName <- vector()
+  
   # Query Yelp API, print results.
-  yelp_search_result <- yelp_search(term="starbucks", location="New York, NY", limit=40)
-  print_search_results(yelp_search_result)
+  yelp_search_result <- yelp_search(term=tolower(searchTerm), location=paste0(neighborhood, ", " , borough,", NY"), limit=limit)
 
   # Pick the top search result, get more info about it.
   # Find Yelp business ID, such as "giacomos-ristorante-boston".
-  business_id = content(yelp_search_result)$businesses[[1]]$id
-  yelp_business_result <- yelp_business(business_id)
-  print_business_results(yelp_business_result)
+  #business_id = content(yelp_search_result)$businesses[[39]]$id
+  #yelp_business_result <- yelp_business(business_id)
+  
+  numResults <- length(content(yelp_search_result)$businesses)
+  
+  for (i in 1:numResults){
+    lat[i] <- content(yelp_search_result)$businesses[[i]]$location$coordinate$latitude
+    lon[i] <- content(yelp_search_result)$businesses[[i]]$location$coordinate$longitude
+    businessName[i] <- content(yelp_search_result)$businesses[[i]]$name
+  }
+
+  df <- as.data.frame(cbind(lon, lat, businessName))
+  colnames(df) <- c("LON", "LAT", "name")
+  
+  return(df)
+  
+
 }
 
-q <- demo()
+nbh <- read.csv("../data/neighborhoods.csv", header=TRUE)
 
-### Q Contains a small list of starbucks in NY, can be refined
+allStarbucks <- allMcDonalds <- otherWifi <- vector()
 
+for (borough in 1:dim(nbh)[2]){
+  borough_name <- colnames(nbh)[borough]
+  for (neigh in 1:dim(nbh)[1]){
+    
+    neigh_name <- nbh[neigh, borough]
+    if (neigh_name != ""){
+      allStarbucks <- rbind(allStarbucks, demo("Starbucks", neigh_name, borough_name, 40))
+      allMcDonalds <- rbind(allMcDonalds, demo("McDonalds", neigh_name, borough_name, 40))
+      otherWifi <- rbind(otherWifi, demo("free wifi", neigh_name, borough_name, 40))
+    }
+    
+  }
+}
+
+allStarbucks <- unique(allStarbucks)
+allMcDonalds <- unique(allMcDonalds)
+otherWifi <- unique(otherWifi)
+allStarbucks <- allStarbucks[allStarbucks$name == "Starbucks",]
+allMcDonalds <- allMcDonalds[allMcDonalds$name == "McDonald's",]
+row.names(allStarbucks) <- 1:nrow(allStarbucks)
+row.names(allMcDonalds) <- 1:nrow(allMcDonalds)
+row.names(otherWifi) <- 1:nrow(otherWifi)
+
+rest_pubWifi <- rbind(allStarbucks,allMcDonalds,otherWifi)
+colnames(rest_pubWifi) <- c("LON", "LAT", "network")
+
+```
+
+```{r}
+
+data_c <- as.data.frame(rbind(data_c1, data_c2, as.matrix(rest_pubWifi)))
+colnames(data_c) <- c("LON", "LAT", "network")
+
+emory <- gmap("New York,New York", zoom = 12, scale = 3)
+d <- data_c
+coordinates(d) <- ~ LON + LAT
+projection(d) <- "+init=epsg:4326"
+
+d_mrc <- spTransform(d, CRS = CRS(projection(emory)))
+
+d_mrc_bff <- gBuffer(d_mrc, width = 150)
+
+plot(emory)
+par(col = alpha('darkgreen', .35))
+plot(d_mrc_bff, add = TRUE)
+points(d_mrc, cex = 2, pch = 20)
 
 ```
