@@ -89,7 +89,7 @@ yelp_query <- function(path, query_args) {
 
 yelp_search <- function(term, location, limit=10) {
   # Search term and location go in the query string.
-  path <- "/v2/search/"
+  path <- "/v2/search"
   query_args <- list(term=term, location=location, limit=limit)
 
   # Make request.
