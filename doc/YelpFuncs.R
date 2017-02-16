@@ -131,8 +131,10 @@ demo <- function(searchTerm, neighborhood, borough, limit) {
     }
   }
   
-  df <- as.data.frame(cbind(lon, lat, businessName))
-  colnames(df) <- c("LON", "LAT", "name")
+  neigh_vector = rep(neighborhood, length(lon))
+  borough_vector = rep(borough, length(lon))
+  df <- as.data.frame(cbind(lon, lat, businessName, neigh_vector, borough_vector))
+  colnames(df) <- c("LON", "LAT", "name", "neighborhood", "borough")
   
   return(df)
   
@@ -151,9 +153,9 @@ readYelpData = function()
       
       neigh_name <- nbh[neigh, borough]
       if (neigh_name != ""){
-        allStarbucks <- rbind(allStarbucks, demo("Starbucks", neigh_name, borough_name, 40))
-        allMcDonalds <- rbind(allMcDonalds, demo("McDonalds", neigh_name, borough_name, 40))
-        otherWifi <- rbind(otherWifi, demo("free wifi", neigh_name, borough_name, 40))
+        allStarbucks <- rbind(allStarbucks, demo("Starbucks", as.character(neigh_name), borough_name, 40))
+        allMcDonalds <- rbind(allMcDonalds, demo("McDonalds", as.character(neigh_name), borough_name, 40))
+        otherWifi <- rbind(otherWifi, demo("free wifi", as.character(neigh_name), borough_name, 40))
       }
       
     }
@@ -169,7 +171,7 @@ readYelpData = function()
   row.names(otherWifi) <- 1:nrow(otherWifi)
   
   rest_pubWifi <- rbind(allStarbucks,allMcDonalds,otherWifi)
-  colnames(rest_pubWifi) <- c("LON", "LAT", "network")
+  colnames(rest_pubWifi) <- c("LON", "LAT", "network", "neighborhood", "borough")
   
   return(rest_pubWifi)
 }
