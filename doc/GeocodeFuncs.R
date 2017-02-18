@@ -20,5 +20,23 @@ NeighborhoodGeocode = function()
   }
   
   colnames(neighborhood_geocode_df) = c("Manhattan lat", "Manhattan lon", "Bronx lat", "Bronx lon", "Queens lat", "Queens lon", "Brooklyn lat", "Brooklyn lon", "Staten Island lat", "Staten Island long")
+  write.csv(neighborhood_geocode_df, "../output/neighborhood_centroid.csv")
   return(neighborhood_geocode_df)
+}
+
+CabDataNoNeighborhood = function()
+{
+  urlGreenCab <-"https://s3.amazonaws.com/nyc-tlc/trip+data/green_tripdata_2016-02.csv"
+  urlYellowCab <- "https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2016-02.csv"
+  data <- read.csv(urlGreenCab, header=TRUE)
+  dataYellow = read.csv(urlYellowCab, header=TRUE)
+  cleanGreenData = rbind(cbind(data$Pickup_longitude, data$Pickup_latitude), cbind(data$Dropoff_longitude, data$Dropoff_latitude))
+  cleanYellowData =  rbind(cbind(dataYellow$pickup_longitude, dataYellow$pickup_latitude), cbind(dataYellow$dropoff_longitude, dataYellow$dropoff_latitude))
+  cleanGreenData = cbind(cleanGreenData, as.vector(rep("Green", nrow(cleanGreenData))))
+  cleanYellowData = cbind(cleanYellowData, as.vector(rep("Yellow", nrow(cleanYellowData))))
+  totalCabData = rbind(cleanGreenData, cleanYellowData)
+  totalCabData = cbind(totalCabData, as.vector(rep(NA, nrow(totalCabData))), as.vector(rep(NA, nrow(totalCabData))))
+  colnames(totalCabData) = c("lon", "lat", "name", "borough", "neighborhood")
+  write.csv(totalCabData, "../output/cabdata_noneighborhood.csv")
+  return(totalCabData)
 }
