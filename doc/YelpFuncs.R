@@ -175,3 +175,16 @@ readYelpData = function()
   
   return(rest_pubWifi)
 }
+
+getNYCData = function()
+{
+  data1 <- read.csv("../data/Free_WiFi_Hotspots_09042005.csv", header=TRUE)
+  data2 <- read.csv("../data/LinkNYC_Locations.csv", header=TRUE)
+  
+  data_c1 <- cbind(data1$LON, data1$LAT, data1$SSID, rep(NA, length(data1$LON)), rep(NA, length(data1$LON)))
+  data_c2 <- cbind(data2$Longitude, data2$Longitude, data2$CB.Link.ID, rep(NA, length(data2$Longitude)), rep(NA, length(data2$Longitude)))
+  colnames(data_c1) = c("lon", "lat", "name", "borough", "neighborhood")
+  colnames(data_c2) = c("lon", "lat", "name", "borough", "neighborhood")
+  write.csv(data_c1, "../output/NYCPublicWifi_noneighborhood.csv")
+  write.csv(data_c2, "../output/NYCLink_noneighborhood.csv")
+}
