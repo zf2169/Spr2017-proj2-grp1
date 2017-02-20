@@ -1,0 +1,25 @@
+---
+title: "Untitled"
+author: "Sean Reddy"
+date: "February 20, 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(raster)
+library(rgeos)
+
+zip <- shapefile("../data/nynta_16d/nynta.shp")
+zip
+
+set.seed(0)
+xy <- coordinates(spsample(zip, 10, 'random'))
+plot(zip, col='gray')
+points(xy, pch=20, col='red', cex=2)
+# 
+extract(zip, xy)
+```
