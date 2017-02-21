@@ -3,15 +3,19 @@ library(shiny)
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(tabsetPanel(
 
-    # page 1- map plotout page
+  # page 1- map plotout page
   tabPanel("layout",
     sidebarLayout(
       sidebarPanel(
-        selectInput("borough", label = h5("Choose an Area"), 
+        selectInput("borough", label = h5("Choose a Borough"), 
                            choices = list("Manhattan"=0,
-                                          "Queen"=1, 
-                                          "xxx"=2),
+                                          "Bronx"=1, 
+                                          "Queens"=2,
+                                          "Brooklyn"=3,
+                                          "Staten Island"=4
+                                          ),
                            selected = 0),
+        uiOutput("neighborhood"),
         selectInput("time", label=h5("Choose Time"),
                     choices = list("111"=1,
                                    "222"=2,
