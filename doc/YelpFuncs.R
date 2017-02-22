@@ -186,8 +186,8 @@ getNYCData = function()
   
   data_c1 <- cbind(data1$LON, data1$LAT, data1$SSID, rep(NA, length(data1$LON)), rep(NA, length(data1$LON)))
   data_c2 <- cbind(data2$Longitude, data2$Longitude, data2$CB.Link.ID, rep(NA, length(data2$Longitude)), rep(NA, length(data2$Longitude)))
-  colnames(data_c1) = c("lon", "lat", "name", "borough", "neighborhood")
-  colnames(data_c2) = c("lon", "lat", "name", "borough", "neighborhood")
+  colnames(data_c1) = c("LON", "LAT", "name", "borough", "neighborhood")
+  colnames(data_c2) = c("LON", "LAT", "name", "borough", "neighborhood")
   write.csv(data_c1, "../output/NYCPublicWifi_noneighborhood.csv")
   write.csv(data_c2, "../output/NYCLink_noneighborhood.csv")
 }
