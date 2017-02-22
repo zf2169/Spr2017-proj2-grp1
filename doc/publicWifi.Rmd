@@ -205,6 +205,7 @@ taxiData <- identifyNeighborhoodsAndBoroughs(pts6, nycShapeFile)
 
 ```
 
+
 ```{r}
 
 ### (3) Identify centroids of shapefile regions
@@ -234,6 +235,11 @@ wifiData <- identifyNeighborhoodsAndBoroughs(wifiData, nycShapeFile)
 # Plot heatmaps of wifi and taxi data
 
 source("../doc/createHeatMap.R")
+
+devtools::install_github("dkahle/ggmap")
+devtools::install_github("hadley/ggplot2")
+library("ggmap")
+library("ggplot2")
 
 # Show WiFi Coverage Heatmap
 wifiHeatMap <- createHeatMap(neighborhood ="Murray Hill-Kips Bay", "Manhattan", wifiData, "blue")

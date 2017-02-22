@@ -55,9 +55,9 @@ shinyUI(fluidPage(tabsetPanel(
            sidebarLayout(
              sidebarPanel(
                selectInput("Places to go for Wi-Fi", "For Customers...",
-                           choices=c("Ideal Store for Wi-Fi"=1,
-                                     "Never Go"=2,
-                                     "Maybe OK to Go"=3))),
+                           choices=c("Ideal Place to go for Wi-Fi"=1,
+                                     "Never Go for Wi-Fi"=2,
+                                     "Maybe OK to Go for Wi-Fi"=3))),
              mainPanel(
                h1("Where should we go when need Wi-Fi connections")
                #textOutput("text") - 
