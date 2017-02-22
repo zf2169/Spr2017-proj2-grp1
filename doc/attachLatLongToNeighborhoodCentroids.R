@@ -1,9 +1,9 @@
-# install.packages("tidyr)
+install.packages("tidyr")
 require("tidyr")
 
 # download files into R
-neighborhood.names <- read.csv("../data/neighborhoods.csv", header=TRUE)
-neighborhood.centroid <- read.csv("../output/neighborhood_centroid.csv", header = TRUE)
+neighborhood.names <- read.csv("/Users/xuehan/Desktop/Spr2017-proj2-grp1/data/neighborhoods.csv", header=TRUE)
+neighborhood.centroid <- read.csv("/Users/xuehan/Desktop/Spr2017-proj2-grp1/output/neighborhood_centroid.csv", header = TRUE)
 
 # change neighborhood names df by borough into a "long" df
 neighborhood.names <- gather(neighborhood.names)
@@ -25,4 +25,4 @@ neighborhood.draft <- neighborhood.draft[which(!is.na(neighborhood.draft$lat)), 
 neighborhood.draft$NeighborhoodID <- 1:nrow(neighborhood.draft)
 
 # write df into a csv file for use in other files later
-write.csv(neighborhood.draft, file = "../output/neighborhood_centroids_latlong.csv", row.names = F)
+write.csv(neighborhood.draft, file = "/Users/xuehan/Desktop/Spr2017-proj2-grp1/output/neighborhood_centroids_latlong.csv", row.names = F)

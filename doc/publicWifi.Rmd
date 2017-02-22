@@ -179,7 +179,8 @@ colnames(data_c1) <- colnames(data_c2) <- c("LON", "LAT","network")
 
 # Load in Taxi Data
 url <-"https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2016-02.csv"
-data <- read.csv(url, header=TRUE, as.is=TRUE)
+#data <- read.csv(url, header=TRUE, as.is=TRUE)
+data<-read.csv("../data/yellow_tripdata_2016-02.csv")
 
 # Clean up taxi data by using both pickup/dropoff, removing empty coordinates, and removing likely erroneous coordinates.
 pts <- as.data.frame(cbind(data$pickup_longitude, data$pickup_latitude, data$tpep_pickup_datetime))

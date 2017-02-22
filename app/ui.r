@@ -5,7 +5,7 @@ library(dplyr)
 shinyUI(fluidPage(tabsetPanel(
 
   # page 1- map plotout page
-  tabPanel("Layout",
+  tabPanel("Discussion",
     sidebarLayout(
         sidebarPanel(
         # selectbox to choose the borough
@@ -24,6 +24,7 @@ shinyUI(fluidPage(tabsetPanel(
         #                            "222"=2,
         #                            "333"=3),
         #             selected = 1),
+        
         checkboxGroupInput("mapstyle", label = "View Maps",
                            choices = list("Heat map"=1,
                                           "Google map"=2))
@@ -31,19 +32,28 @@ shinyUI(fluidPage(tabsetPanel(
       # the main panel of page 1
       mainPanel(
         # main title
-        h1("Wifi Spots/Heat map throughout New York City"),
+        h1("Wifi Spots/Heat Map throughout New York City"),
         plotOutput("map")
       ))),
   
-  tabPanel("Conclusion",
+  tabPanel("Result",
       sidebarLayout(
         sidebarPanel(
-          radioButtons("result", label = "Places to be explored",
-                        choices  = list("Place 1"=1,
-                                       "Place 2"=2,
-                                       "Place 3"=3),
-                        selected = 1)
-        ),
+          selectInput("Places to Open Stores", Label="For Small Business Owners...",
+                      choices=list("Ideal Place to Open a Store"=1,
+                                   "Re-consider the Location Plz"=2,
+                                   "Maybe a Good Place to Open a Store"=3),
+                      selected = 1),
+            
+        
+          
+          #radioButtons("Results", label = "Places to",
+          
+          #             choices  = list("Place 1"=1,
+          #                               "Place 2"=2,
+          #                               "Place 3"=3),
+          #              selected = 1)
+         #),
         mainPanel(
           h1("Conclusion"),
           textOutput("text"),
@@ -51,5 +61,5 @@ shinyUI(fluidPage(tabsetPanel(
         )
        )
     )
-)))
+))))
 
