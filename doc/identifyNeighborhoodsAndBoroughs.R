@@ -9,7 +9,7 @@ identifyNeighborhoodsAndBoroughs <- function(df, shapefile){
   proj4string(df) <- CRS("+proj=longlat +datum=WGS84")
   df <- spTransform(df, proj4string(shapefile))
   shapefile_where <- df %over% shapefile
-  origDf$mapped_neighborhood <- shapefile_where$NTAName
-  origDf$mapped_borough <- shapefile_where$BoroName
+  origDf$neighborhood <- shapefile_where$NTAName
+  origDf$borough <- shapefile_where$BoroName
   return(origDf)
 }

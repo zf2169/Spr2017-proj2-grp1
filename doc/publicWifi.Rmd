@@ -1,5 +1,5 @@
 ---
-title: 'Project 2: Seamless Public WiFi'
+title: 'Project 2: Identifying Public WiFi Scarcity'
 author: 'Group 1: Xuehan Liu, Zhilin Fan, Vikas Arun, Ken Chew, Sean Reddy'
 date: "February 20, 2017"
 output:
@@ -8,57 +8,27 @@ output:
 ---
 
 ```{r}
-data1 <- read.csv("../data/Free_WiFi_Hotspots_09042005.csv", header=TRUE)
-data2 <- read.csv("../data/LinkNYC_Locations.csv", header=TRUE)
 
-data_c1 <- cbind(data1$LON, data1$LAT, data1$SSID)
-data_c2 <- cbind(data2$Longitude, data2$Longitude, data2$CB.Link.ID)
-
-library(dismo)
-library(sp)
-library(geosphere)
-library(ggplot2)
-library(ggmap)
-library(rgeos)
-library(scales)
-
-
-```
-
-```{r eval=FALSE}
-
-### Ignore this section for now
-
-consumerKey = "l_rSuqvu8nD49nJ7Y3uGKw"
-consumerSecret = "AZA-PdWtTt2PCTK5SFp792LGHUI"
-token = "	tzJ8ZyDR2jeAm4SAEMOkJJe5gFPOkwBl"
-token_secret = "e89np3uLyLE5ffunidczgL_HpRY"
-
-require(httr)
-require(httpuv)
-require(jsonlite)
-# authorization
-myapp <- oauth_app("YELP", key=consumerKey, secret=consumerSecret)
-sig <- sign_oauth1.0(myapp, token=token,token_secret=token_secret)
-
-limit <- 40
-
-# or 10 bars by geo-coordinates
-yelpurl <- paste0("https://api.yelp.com/v3/businesses/search?limit=",limit,"&term=starbucks&location=New+York%2C+NY")
-
-locationdata <- GET(yelpurl, sig)
-locationdataContent <- content(locationdata)
-locationdataList <- jsonlite::fromJSON(toJSON(locationdataContent))
-q <- head(data.frame(locationdataList))
-
-q$error.description
-```
-
-```{r}
+require(dismo)
+require(sp)
+require(geosphere)
+require(ggplot2)
+require(ggmap)
+require(rgeos)
+require(scales)
+require(raster)
 require(httr)
 require(httpuv)
 require(jsonlite)
 require(base64enc)
+
+```
+
+```{r}
+
+
+### I believe this section is now obsolete due to Vikas's code. Vikas can you please edit this to reflect your changes?
+### Ideally it will merely use "source" and reference your function you created, similarly to later code blocks.
 
 # Your credentials, from https://www.yelp.com/developers/manage_api_keys
 consumerKey = "l_rSuqvu8nD49nJ7Y3uGKw"
@@ -186,19 +156,26 @@ colnames(rest_pubWifi) <- c("LON", "LAT", "network")
 
 ```
 
+ ---  Can start running code from here if we have saved Yelp and public wifi CSVs (load libraries above though). ---
+
 ```{r}
 
-data_c <- as.data.frame(rbind(data_c1, data_c2, as.matrix(rest_pubWifi)))
-colnames(data_c) <- c("LON", "LAT", "network")
+### (1) Public WiFi Data
+
+# Load in and format Public WiFi locations
+data1 <- read.csv("../data/Free_WiFi_Hotspots_09042005.csv", header=TRUE)
+data2 <- read.csv("../data/LinkNYC_Locations.csv", header=TRUE)
+
+data_c1 <- subset(data1, select=c(LON, LAT, SSID))
+data_c2 <- subset(data2, select=c(Longitude, Latitude, CB.Link.ID))
+
+colnames(data_c1) <- colnames(data_c2) <- c("LON", "LAT","network")
 
 ```
 
-
-
 ```{r}
 
-library(raster)
-library(rgeos)
+### (2) Taxi Data
 
 # Load in Taxi Data
 url <-"https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2016-02.csv"
@@ -214,42 +191,66 @@ pts3$LON <- as.numeric(as.character(pts3$LON))
 pts3$LAT <- as.numeric(as.character(pts3$LAT))
 pts4 <- pts3[(pts3$LAT != 0) & (pts3$LON != 0),]
 pts5 <- pts4[(pts4$LAT >= 38) & (pts4$LAT <= 44) & (pts4$LON <= -72) & (pts4$LON >= -76),]
+
+# Remove the following line to use ALL taxi data
 pts6 <- pts5[1:500000,]
 
+# Load in shapefile
 nycShapeFile <- shapefile("../data/nynta_16d/nynta.shp")
 
+# Tag lat/lon coordinates with their respective neighborhood for taxi data
 source("../doc/identifyNeighborhoodsAndBoroughs.R")
-pts7 <- identifyNeighborhoodsAndBoroughs(pts6, nycShapeFile)
+taxiData <- identifyNeighborhoodsAndBoroughs(pts6, nycShapeFile)
 
 ```
 
 ```{r}
-# Convert neighborhoods to old naming convention
-nbh <- read.csv("../data/neighborhoods.csv", header=TRUE)
-centroidLocations <- centrLoc <- read.csv("../output/neighborhood_centroids_latlong.csv", header=TRUE)
-colnames(centroidLocations) <- colnames(centrLoc) <- c("borough", "neighborhood", "LAT", "LON", "neighborhoodID")
 
-centroidMapping <- identifyNeighborhoodsAndBoroughs(centrLoc, nycShapeFile)
+### (3) Identify centroids of shapefile regions
 
-getApproxOldName <- function(mapped_name){
-  oldName <- centroidMapping$neighborhood[centroidMapping$mapped_neighborhood == mapped_name][1]
-  return(oldName)
-}
-
-pts7$neighborhood <- sapply(pts7$mapped_neighborhood, getApproxOldName)
-
-pts8 <- pts7[complete.cases(pts7),]
-colnames(pts8)[5] <- "borough"
+# Find centroids of shapefile regions and write to CSV.
+source("../doc/acquireShapefileCentroids.R")
+centroids <- acquireShapefileCentroids("../data/nynta_16d/nynta.shp")
+write.csv(centroids, file="../output/shapefile_neighborhood_centroids.csv")
 ```
 
 ```{r}
-# Plot heatmaps of yelp and taxi data
-library(ggmap)
+
+### (4) Yelp Data and Aggregation
+
+# Read in yelp data, combine with public wifi data, and then tag with respective neighborhood based on lon/lat
+yelpData <- read.csv("../output/yelpdata.csv", header=TRUE)
+yelpData <- subset(yelpData, select=-c(X))
+
+wifiData <- as.data.frame(rbind(data_c1, data_c2, yelpData))
+wifiData <- identifyNeighborhoodsAndBoroughs(wifiData, nycShapeFile)
+```
+
+```{r}
+
+### (5) Heatmap Creation
+
+# Plot heatmaps of wifi and taxi data
+
 source("../doc/createHeatMap.R")
-taxiHeatMap <- createHeatMap(neighborhood="Alphabet City", "Manhattan", pts8, "red")
+
+# Show WiFi Coverage Heatmap
+wifiHeatMap <- createHeatMap(neighborhood ="Murray Hill-Kips Bay", "Manhattan", wifiData, "blue")
+wifiHeatMap
+
+# Show foot traffic (proxy: taxi pickups/dropoffs) heatmap
+taxiHeatMap <- createHeatMap(neighborhood="Murray Hill-Kips Bay", "Manhattan", taxiData, "red")
 taxiHeatMap
 
-yelpdata <- read.csv("../output/yelpdata.csv", header=TRUE)
-yelpHeatMap <- createHeatMap(neighborhood ="Alphabet City", "Manhattan", yelpdata, "blue")
-yelpHeatMap
+# Force wifi and taxi data to same column formatting
+wifiData <- subset(wifiData, select=-c(network))
+taxiData <- subset(taxiData, select=-c(TIME))
+
+# Test combined map for a given neighborhood
+comboMap <- createComboHeatMap("Murray Hill-Kips Bay", borough="Manhattan", wifiData, taxiData, "blue", "red")
+comboMap
+
+# Test combined map for an entire borough
+comboMap2 <- createComboHeatMap("None", borough="Bronx", wifiData, taxiData, "blue", "red")
+comboMap2
 ```
