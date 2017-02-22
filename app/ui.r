@@ -6,35 +6,31 @@ shinyUI(fluidPage(tabsetPanel(
 
   # page 1- map plotout page
   tabPanel("Discussion",
-    sidebarLayout(
-        sidebarPanel(
-        # selectbox to choose the borough
-        selectInput("borough", label = "Choose a Borough", 
-                           choices = list("Manhattan", "Bronx", 
-                                          "Queens", "Brooklyn",
-                                          "Staten Island"="Staten_Island"
-                                          ),
-                           selected = 0),
-        
+           sidebarLayout(
+             sidebarPanel(
+               # selectbox to choose the borough
+               selectInput("borough", label = "Choose a Borough", 
+                           choices = list("Bronx", "Brooklyn",
+                                          "Manhattan",
+                                          "Queens",
+                                          "Staten Island"
+                           ),
+                           selected = NULL),
+               
         # selectbox to choose the neighborhood based on the borough
-        uiOutput("neighborhood"),
-        
-        # selectInput("time", label="Choose Time",
-        #             choices = list("111"=1,
-        #                            "222"=2,
-        #                            "333"=3),
-        #             selected = 1),
-        
+        uiOutput("wifineighborhood"),
+        uiOutput("taxineighborhood"),        
+
         checkboxGroupInput("mapstyle", label = "View Maps",
-                           choices = list("Heat map"=1,
-                                          "Google map"=2))
-      ),
-      # the main panel of page 1
-      mainPanel(
-        # main title
-        h1("Wifi Spots/Heat Map throughout New York City"),
-        plotOutput("map")
-      ))),
+                           choices = c("Wifi map" ,"Google map"))
+             ),
+        # the main panel of page 1
+        mainPanel(
+          # main title
+          h1("Wifi Spots/Heat Map throughout New York City"),
+          plotOutput("map")
+        ))),
+
   
   #Page 2 - Result Tab
   tabPanel("Results - Business Owner Side",
