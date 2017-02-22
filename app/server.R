@@ -21,7 +21,7 @@ data2 <- read.csv("../data/LinkNYC_Locations.csv", header=TRUE)
 data_c1 <- subset(data1, select=c(LON, LAT, SSID))
 data_c2 <- subset(data2, select=c(Longitude, Latitude, CB.Link.ID))
 colnames(data_c1) <- colnames(data_c2) <- c("LON", "LAT","network")
-
+ 
 # Taxidata
 data <- read.csv("../data/yellow_tripdata_2016-02.csv", header = T)
 # Clean up taxi data by using both pickup/dropoff, removing empty coordinates, and removing likely erroneous coordinates.
