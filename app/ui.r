@@ -47,13 +47,7 @@ shinyUI(fluidPage(tabsetPanel(
             
         
           
-          #radioButtons("Results", label = "Places to",
           
-          #             choices  = list("Place 1"=1,
-          #                               "Place 2"=2,
-          #                               "Place 3"=3),
-          #              selected = 1)
-         #),
         mainPanel(
           h1("Conclusion"),
           textOutput("text"),
