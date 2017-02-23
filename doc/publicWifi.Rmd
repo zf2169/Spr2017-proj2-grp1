@@ -236,8 +236,10 @@ wifiData <- identifyNeighborhoodsAndBoroughs(wifiData, nycShapeFile)
 
 source("../doc/createHeatMap.R")
 
-devtools::install_github("dkahle/ggmap")
-devtools::install_github("hadley/ggplot2")
+#devtools::install_github("dkahle/ggmap")
+#devtools::install_github("hadley/ggplot2")
+install.packages("ggplot2")
+install.packages("ggmap")
 library("ggmap")
 library("ggplot2")
 

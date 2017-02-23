@@ -37,9 +37,9 @@ shinyUI(fluidPage(tabsetPanel(
       sidebarLayout(
         sidebarPanel(
           selectInput("Places2", "For Small Business Owners...",
-                      choices=list("Ideal Place to Open a Store"=1,
-                                   "Re-consider the Location Plz"=2,
-                                   "Maybe a Good Place to Open a Store"=3))),
+                      choices=list("Ideal Place to Open a Store",
+                                   "Re-consider the Location Plz",
+                                   "Maybe a Good Place to Open a Store"))),
          mainPanel(
           h1("Where should Small Business Owners to Open a Store?"),
           plotOutput("map2")
