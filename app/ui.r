@@ -36,14 +36,13 @@ shinyUI(fluidPage(tabsetPanel(
   tabPanel("Results - Business Owner Side",
       sidebarLayout(
         sidebarPanel(
-          selectInput("Places to Open Stores", "For Small Business Owners...",
+          selectInput("Places1", "For Small Business Owners...",
                       choices=c("Ideal Place to Open a Store"=1,
                                    "Re-consider the Location Plz"=2,
                                    "Maybe a Good Place to Open a Store"=3))),
          mainPanel(
-          h1("Where should Small Business Owners to Open a Store?")
-          #textOutput("text")
-          #plotOutput("map")
+          h1("Where should Small Business Owners to Open a Store?"),
+          plotOutput("map2")
         )
        
       )
@@ -54,14 +53,13 @@ shinyUI(fluidPage(tabsetPanel(
   tabPanel("Results - Customer Side",
            sidebarLayout(
              sidebarPanel(
-               selectInput("Places to go for Wi-Fi", "For Customers...",
+               selectInput("Places2", "For Customers...",
                            choices=c("Ideal Place to go for Wi-Fi"=1,
                                      "Never Go for Wi-Fi"=2,
                                      "Maybe OK to Go for Wi-Fi"=3))),
              mainPanel(
-               h1("Where should we go when need Wi-Fi connections")
-               #textOutput("text") - 
-               #plotOutput("map")
+               h1("Where we should go when we need Wi-Fi connections"),
+               plotOutput("map3")
              )
              
            )

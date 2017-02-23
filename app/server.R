@@ -52,5 +52,46 @@ shinyServer(function(input, output) {
       }
     }
   })
+  
+  output$map2<-renderPlot({
+    if (input$Places1==1)
+    {
+      createComboHeatMap("Flushing", 
+                         borough="Queens", wifiData, taxiData, "blue", "red")
+    }
+ # })
+  
+#  output$map3<-renderPlot({
+    if (input$Places1==2)
+    {
+      createComboHeatMap("None",borough="Brooklyn", wifiData, taxiData, "blue", "red")
+    }
+#  })
+  
+ # output$map4<-renderPlot({
+  #  if (input$Places1==3)
+  else 
+   {
+      createComboHeatMap("Clinton",borough="Manhattan", wifiData, taxiData, "blue", "red")
+    }
+  })
+  
+  output$map3<-renderPlot({
+    if (input$Places2==1)
+    {
+      createComboHeatMap("Flushing", 
+                         borough="Queens", wifiData, taxiData, "blue", "red")
+    }
+    
+    if (input$Places2==2)
+    {
+      createComboHeatMap("None",borough="Brooklyn", wifiData, taxiData, "blue", "red")
+    }
+    
+    else 
+    {
+      createComboHeatMap("Clinton",borough="Manhattan", wifiData, taxiData, "blue", "red")
+    }
+  })
 })
 
