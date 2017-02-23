@@ -50,6 +50,9 @@ wifiData <- identifyNeighborhoodsAndBoroughs(wifiData, nycShapeFile)
 wifiData <- subset(wifiData, select=-c(network))
 taxiData <- subset(taxiData, select=-c(TIME))
 
-getneighborhood<- function(df) {return(unique(df$neighborhood))}
+getneighborhood<- function(df) {
+  r <- unique(df$neighborhood)
+  r <- r[order(r)]
+  return(r)}
 wifi <- dlply(wifiData, .(borough), getneighborhood)
 taxi <- dlply(taxiData, .(borough), getneighborhood)
