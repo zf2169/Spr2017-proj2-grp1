@@ -54,7 +54,7 @@ shinyUI(fluidPage(tabsetPanel(
            sidebarLayout(
              sidebarPanel(
                selectInput("Places3", "For Customers...",
-                           choices=list("Ideal place to go for Wi-Fi"=1,
+                           choices=c("Ideal place to go for Wi-Fi"=1,
                                      "Never go for Wi-Fi"=2,
                                      "Maybe OK to go for Wi-Fi"=3))),
              mainPanel(

@@ -56,7 +56,7 @@ shinyServer(function(input, output) {
   output$map2<-renderPlot({
     if (input$Places2=="Ideal Place to Open a Store")
     {
-      createComboHeatMap("Flushing",borough="Queens", wifiData, taxiData, "green", "red")
+      createComboHeatMap("Flushing",borough="Queens", wifiData, taxiData, "blue", "red")
     }
  # })
   
@@ -71,14 +71,14 @@ shinyServer(function(input, output) {
   #  if (input$Places1=="Maybe a Good Place to Open a Store")
   else 
    {
-      createComboHeatMap("Clinton",borough="Manhattan", wifiData, taxiData, "orange", "red")
+      createComboHeatMap("Clinton",borough="Manhattan", wifiData, taxiData, "blue", "red")
     }
   })
   
   output$map3<-renderPlot({
     if (input$Places3==1)
     {
-      createComboHeatMap("Flushing", borough="Queens", wifiData, taxiData, "green", "red")
+      createComboHeatMap("Flushing", borough="Queens", wifiData, taxiData, "blue", "red")
     }
     
     if (input$Places3==2)
@@ -89,7 +89,7 @@ shinyServer(function(input, output) {
     #else 
     if (input$Places3==3)
     {
-      createComboHeatMap("Clinton",borough="Manhattan", wifiData, taxiData, "orange", "red")
+      createComboHeatMap("Clinton",borough="Manhattan", wifiData, taxiData, "blue", "red")
     }
   })
 })
