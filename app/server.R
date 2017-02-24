@@ -3,7 +3,7 @@ library(shiny)
 shinyServer(function(input, output) {
   
   # sub-selection box
-  output$wifineighborhood <- renderUI({
+  #output$neighborhood <- renderUI({
     
     # Create the selectbox
   #   selectInput("wifineighborhoodname", 
@@ -11,16 +11,20 @@ shinyServer(function(input, output) {
   #               choices  = as.list(wifi[[input$borough]]),
   #               selected = 1)
   # })
-  
   output$neighborhood <- renderUI({
-    
     # Create the selectbox
-    selectInput("neighborhoodname", 
-                label = "Choose the neighborhood for taxi", 
-                choices  = as.list(taxi[input$borough]),
-                selected = 1)
-  })
-  
+     #if (input$borough!="All Boroughs"){
+       selectInput("neighborhoodname", 
+                label = "Choose the neighborhood", 
+                choices  = as.list(common[input$borough]),
+                selected = 1)#}
+    else{
+      selectInput("noneighborhoodname",
+                  label = "Choose the neighborhood",
+                  choices = "None", selected = NULL)
+    }
+    })
+
   output$map <- renderPlot({
      if (length(input$mapstyle)==1) { 
       if (input$mapstyle=="Wifi Coverage") {
@@ -42,7 +46,7 @@ shinyServer(function(input, output) {
         if (input$borough=="All Boroughs"){
           createHeatMap(neighborhood = "None",
                         borough = input$borough, 
-                        wifiData, 
+                        taxiData, 
                         "blue")
         }
         createHeatMap(neighborhood = input$neighborhoodname,
@@ -114,4 +118,4 @@ shinyServer(function(input, output) {
     }
    })
   })
-})
+#})

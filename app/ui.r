@@ -10,7 +10,7 @@ shinyUI(fluidPage(tabsetPanel(
              sidebarPanel(
                # selectbox to choose the borough
                selectInput("borough", label = "Choose a Borough", 
-                           choices = list("All Boroughs","Bronx", "Brooklyn",
+                           choices = list("Bronx", "Brooklyn",
                                           "Manhattan",
                                           "Queens",
                                           "Staten Island"

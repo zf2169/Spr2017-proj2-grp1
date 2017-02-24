@@ -67,3 +67,9 @@ getneighborhood<- function(df) {
   return(r)}
 wifi <- dlply(wifiData, .(borough), getneighborhood)
 taxi <- dlply(taxiData, .(borough), getneighborhood)
+common <- vector("list",6)
+for (i in 1:6) {
+  common[[i]] <- unlist(intersect(wifi[[i]], taxi[[i]]))
+}
+names(common)<- names(wifi)
+
