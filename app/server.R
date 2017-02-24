@@ -6,50 +6,73 @@ shinyServer(function(input, output) {
   output$wifineighborhood <- renderUI({
     
     # Create the selectbox
-    selectInput("wifineighborhoodname", 
-                label = "Choose the neighborhood for Wi-Fi", 
-                choices  = as.list(wifi[[input$borough]]),
-                selected = 1)
-  })
+  #   selectInput("wifineighborhoodname", 
+  #               label = "Choose the neighborhood for Wi-Fi", 
+  #               choices  = as.list(wifi[[input$borough]]),
+  #               selected = 1)
+  # })
   
-  output$taxineighborhood <- renderUI({
+  output$neighborhood <- renderUI({
     
     # Create the selectbox
-    selectInput("taxineighborhoodname", 
+    selectInput("neighborhoodname", 
                 label = "Choose the neighborhood for taxi", 
                 choices  = as.list(taxi[input$borough]),
                 selected = 1)
   })
   
   output$map <- renderPlot({
-    if (length(input$mapstyle)==1) {    
-      if (input$mapstyle=="Wifi map") {
-        createHeatMap(neighborhood = input$wifineighborhoodname,
+     if (length(input$mapstyle)==1) { 
+      if (input$mapstyle=="Wifi Coverage") {
+        if(input$borough=="All Boroughs"){
+          createHeatMap(neighborhood = "None",
+                        borough = input$borough, 
+                        wifiData, 
+                        "blue")
+        }
+        else{
+          
+        createHeatMap(neighborhood = input$neighborhoodname,
                       borough = input$borough, 
                       wifiData, 
                       "blue")
+        }
       }
-      if (input$mapstyle=="Taxi map") {
-        createHeatMap(neighborhood = input$taxineighborhoodname,
+      if (input$mapstyle=="Foot Traffic") {
+        if (input$borough=="All Boroughs"){
+          createHeatMap(neighborhood = "None",
+                        borough = input$borough, 
+                        wifiData, 
+                        "blue")
+        }
+        createHeatMap(neighborhood = input$neighborhoodname,
                       borough = input$borough,
                       taxiData,
                       "red")}
     }
     else {
-      if (input$wifineighborhoodname==input$taxineighborhoodname)
-      {
+      # if (input$wifineighborhoodname==input$taxineighborhoodname)
+       if(input$borough=="All Boroughs"){
+         createHeatMap(neighborhood = "None",
+                       borough = input$borough, 
+                       wifiData, 
+                       "blue")
+       }
+       
+       else
         createComboHeatMap(input$wifineighborhoodname, 
                            borough=input$borough, 
                            wifiData, 
                            taxiData, 
-                           "blue", "red")}
-      else {
-        createComboHeatMap("None", 
-                           borough=input$borough, 
-                           wifiData, 
-                           taxiData, 
                            "blue", "red")
-      }
+      #else {
+       # createComboHeatMap("None", 
+        #                   borough=input$borough, 
+        #                   wifiData, 
+        #                   taxiData, 
+        #                   "blue", "red")
+      
+      #}
     }
   })
   
@@ -89,6 +112,6 @@ shinyServer(function(input, output) {
     {
       createComboHeatMap("Clinton",borough="Manhattan", wifiData, taxiData, "blue", "red")
     }
+   })
   })
 })
-

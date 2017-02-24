@@ -4,8 +4,8 @@
 #install.packages("dplyr")
 #install.packages("raster")
 #install.packages("rgeos")
-install.packages("ggmap")
-install.packages("ggplot2")
+install.packages("ggmap",type="source")
+install.packages("ggplot2",type="source")
 #install.packages("rgdal")
 library(choroplethr)
 library(devtools)
@@ -16,9 +16,7 @@ library(ggmap)
 library(ggplot2)
 library(rgdal)
 
-library(devtools)
-devtools::install_github("dkahle/ggmap")
-#devtools::install_github("hadley/ggplot2")
+
 
 source("../doc/identifyNeighborhoodsAndBoroughs.R")
 nycShapeFile <- shapefile("../data/nynta_16d/nynta.shp")

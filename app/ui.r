@@ -10,7 +10,7 @@ shinyUI(fluidPage(tabsetPanel(
              sidebarPanel(
                # selectbox to choose the borough
                selectInput("borough", label = "Choose a Borough", 
-                           choices = list("Bronx", "Brooklyn",
+                           choices = list("All Boroughs","Bronx", "Brooklyn",
                                           "Manhattan",
                                           "Queens",
                                           "Staten Island"
@@ -18,11 +18,19 @@ shinyUI(fluidPage(tabsetPanel(
                            selected = NULL),
                
         # selectbox to choose the neighborhood based on the borough
-        uiOutput("wifineighborhood"),
-        uiOutput("taxineighborhood"),        
+        #uiOutput("wifineighborhood"),
+        uiOutput("neighborhood"),        
 
+        #selectInput("neiborhood", label = "Choose a Neiborhood", 
+        #            choices = list("Bronx", "Brooklyn",
+        #                           "Manhattan",
+        #                           "Queens",
+        #                           "Staten Island"
+        #            ),
+        #            selected = NULL),
+        
         checkboxGroupInput("mapstyle", label = "View Maps",
-                           choices = c("Wifi map" ,"Google map"))
+                           choices = c("Wifi Coverage" ,"Foot Traffic"))
              ),
         # the main panel of page 1
         mainPanel(
