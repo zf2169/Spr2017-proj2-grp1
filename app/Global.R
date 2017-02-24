@@ -1,11 +1,20 @@
-# must run before shinyapp to get the files we need 
+# must run before shinyapp to get the files we need
+install.packages("choroplethr")
+install.packages("devtools")
+install.packages("dplyr")
+install.packages("raster")
+install.packages("rgeos")
+install.packages("ggmap")
+install.packages("ggplot2")
+install.packages("rgdal")
 library(choroplethr)
-library(choroplethrZip)
+library(devtools)
 library(dplyr)
 library(raster)
 library(rgeos)
 library(ggmap)
 library(ggplot2)
+library(rgdal)
 
 source("../doc/identifyNeighborhoodsAndBoroughs.R")
 nycShapeFile <- shapefile("../data/nynta_16d/nynta.shp")

@@ -29,7 +29,7 @@ shinyServer(function(input, output) {
                       wifiData, 
                       "blue")
       }
-      if (input$mapstyle=="Google map") {
+      if (input$mapstyle=="Taxi map") {
         createHeatMap(neighborhood = input$taxineighborhoodname,
                       borough = input$borough,
                       taxiData,
