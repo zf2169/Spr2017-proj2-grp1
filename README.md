@@ -2,45 +2,31 @@
 
 ### [Project Description](doc/project2_desc.md)
 
-![screenshot](doc/screenshot2.png)
+### Project Title: Busy Signal
 
-In this second project of GU4243/GR5243 Applied Data Science, we develop an *Exploratory Data Analysis and Visualization* shiny app on a topic of your choice using U.S. government open data released on the [data.gov](https://data.gov/) website. See [Project 2 Description](project2_desc.md) for more details.  
++ Team Group 1 (Spring 2017)
+	+ Ken Chew (kc3040)
+	+ Sean Reddy (sr3336)
+	+ Vikas Arun (va2298)
+	+ Xuehan Liu (xl2615)
+	+ Zhilin Fan (zf2169)
+	
+<img src="data/wifi.jpg" alt="Wifi Pyramid" style="width: 500px;"/>
 
-The **learning goals** for this project is:
++ **Project summary**: Wifi has become one of the basic needs of our generation. Yet, we notice that there is very inadequate *free* wifi coverage where it is needed the most. Therein lies an opportunity: businesses (restaurants or hair salon, etc) can provide free wifi access where it is needed the most to attract wifi-hungry customers. What our app does is to tell business owners if their area is adequately covered given the human traffic and also the other free wifi hotspots available from LinkNYC or other establishments nearby like Starbucks or MacDonalds. 
 
-- business intelligence for data science
-- data cleaning
-- data visualization
-- systems development/design life cycle
-- shiny app/shiny server
 
-*The above general statement about project 2 can be removed once you are finished with your project. It is optional.
++ **Contribution statement**: All team members contributed equally in all stages of this project. Specifically, Ken, Sean and Vikas worked on pulling/cleaning the data and writing the functions required to produce the heat maps. Xuehan and Zhilin worked on conceptualizing and implementing the Shiny App. All team members approve our work presented in this GitHub repository, including this contributions statement. 
 
-## Project Title Lorem ipsum dolor sit amet
-Term: Spring 2017
-
-+ Team #
-+ **Projec title**: + Team members
-	+ team member 1
-	+ team member 2
-	+ team member 3
-	+ team member 4
-	+ team member 5
-
-+ **Project summary**: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-+ **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
-
-Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
+Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is organized as follows.
 
 ```
 proj/
-├── app/
-├── lib/
-├── data/
-├── doc/
-└── output/
+  app/
+  lib/
+  data/
+  doc/
+  output/
 ```
 
-Please see each subfolder for a README file.
-
+Please run the Shiny App from the "Global.R" file in the "app" folder.
