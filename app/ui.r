@@ -6,10 +6,10 @@ shinyUI(fluidPage(tabsetPanel(
 
   # page 1- map plotout page
   tabPanel("Discussion",
-           sidebarLayout(
-             sidebarPanel(
-               # selectbox to choose the borough
-               selectInput("borough", label = "Choose a Borough", 
+    sidebarLayout(
+      sidebarPanel(
+             # selectbox to choose the borough
+          selectInput("borough", label = "Choose a Borough", 
                            choices = list("Bronx", "Brooklyn",
                                           "Manhattan",
                                           "Queens",
@@ -18,19 +18,11 @@ shinyUI(fluidPage(tabsetPanel(
                            selected = NULL),
                
         # selectbox to choose the neighborhood based on the borough
-        #uiOutput("wifineighborhood"),
-        uiOutput("neighborhood"),        
+          uiOutput("neighborhood"),        
 
-        #selectInput("neiborhood", label = "Choose a Neiborhood", 
-        #            choices = list("Bronx", "Brooklyn",
-        #                           "Manhattan",
-        #                           "Queens",
-        #                           "Staten Island"
-        #            ),
-        #            selected = NULL),
-        
-        checkboxGroupInput("mapstyle", label = "View Maps",
-                           choices = c("Wifi Coverage" ,"Foot Traffic"))
+          radioButtons("mapstyle", label = "View Maps",
+                      choices = list("Wifi Coverage" ,"Foot Traffic", "Combo"),
+                      selected = NULL)
              ),
         # the main panel of page 1
         mainPanel(
