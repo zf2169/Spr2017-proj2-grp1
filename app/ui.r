@@ -36,12 +36,12 @@ shinyUI(fluidPage(tabsetPanel(
   tabPanel("Results - Business Owner Side",
       sidebarLayout(
         sidebarPanel(
-          selectInput("Places2", "For Small Business Owners...",
-                      choices=list("Ideal Place to Open a Store",
-                                   "Re-consider the Location Plz",
-                                   "Maybe a Good Place to Open a Store"))),
+          selectInput("Places2", "For Resturant Owners...",
+                      choices=list("Ideal place to open a resturant",
+                                   "Re-consider the location Please",
+                                   "Maybe a good place"))),
          mainPanel(
-          h1("Where should Small Business Owners to Open a Store?"),
+          h1("Where to Open a Resturant in New York?"),
           plotOutput("map2")
         )
        
@@ -54,11 +54,11 @@ shinyUI(fluidPage(tabsetPanel(
            sidebarLayout(
              sidebarPanel(
                selectInput("Places3", "For Customers...",
-                           choices=c("Ideal place to go for Wi-Fi"=1,
-                                     "Never go for Wi-Fi"=2,
-                                     "Maybe OK to go for Wi-Fi"=3))),
+                           choices=list("Ideal place to go for Wi-Fi",
+                                     "Never go for Wi-Fi",
+                                     "Maybe OK to go for Wi-Fi"))),
              mainPanel(
-               h1("Where we should go when we need Wi-Fi connections?"),
+               h1("Where should we eat if we need Wi-Fi connections?"),
                plotOutput("map3")
              )
              

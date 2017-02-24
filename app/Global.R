@@ -16,6 +16,10 @@ library(ggmap)
 library(ggplot2)
 library(rgdal)
 
+library(devtools)
+devtools::install_github("dkahle/ggmap")
+devtools::install_github("hadley/ggplot2")
+
 source("../doc/identifyNeighborhoodsAndBoroughs.R")
 nycShapeFile <- shapefile("../data/nynta_16d/nynta.shp")
 source("../doc/createHeatMap.R")
